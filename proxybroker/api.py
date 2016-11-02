@@ -50,12 +50,13 @@ class Broker:
     """
 
     def __init__(self, queue=None, timeout=8, max_conn=200, max_tries=3,
-                 judges=None, providers=None, verify_ssl=False, loop=None,
+                 judges=None, providers=None, verify_ssl=False, loop=None, grab_timeout=10,
                  **kwargs):
         self._loop = loop or asyncio.get_event_loop()
         self._proxies = queue or asyncio.Queue(loop=self._loop)
         self._resolver = Resolver(loop=self._loop)
         self._timeout = timeout
+        self._grab_timeout = grab_timeout
         self._verify_ssl = verify_ssl
 
         self.unique_proxies = {}
@@ -280,10 +281,14 @@ class Broker:
         log.debug('Start grabbing proxies')
         while True:
             for tasks in _get_tasks():
-                for task in asyncio.as_completed(tasks):
-                    proxies = await task
-                    for proxy in proxies:
-                        await self._handle(proxy, check=check)
+                try:
+                    for task in asyncio.as_completed(tasks, timeout=self._grab_timeout):
+                        proxies = await task
+                        for proxy in proxies:
+                            await self._handle(proxy, check=check)
+                except:
+                    log.debug("Task has error")
+
             log.debug('Grab cycle is complete')
             if self._server:
                 log.debug('fall asleep for %d seconds' % GRAB_PAUSE)
