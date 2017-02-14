@@ -622,11 +622,52 @@ class Proxylistplus_com(Provider):
         await self._find_on_pages(urls)
 
 
+class Kuaidaili(Provider):
+    domain = "kuaidaili.com"
+
+    async def _pipe(self):
+        urls = ["http://www.kuaidaili.com/free/inha/%d" % n for n in range(1, 21)]
+        urls += ["http://www.kuaidaili.com/free/outha/%d" % n for n in range(1, 21)]
+        await self._find_on_pages(urls)
+
+
+class Xicidaili(Provider):
+    domain = "xicidaili.com"
+
+    async def _pipe(self):
+        urls = ["http://www.xicidaili.com/nn/%d" % n for n in range(1, 21)]
+        urls += ["http://www.xicidaili.com/wn/%d" % n for n in range(1, 21)]
+        await self._find_on_pages(urls)
+
+class Freeproxylists_net(Provider):
+    domain = "freeproxylists.net"
+
+    async def _pipe(self):
+        urls = ["http://www.freeproxylists.net/zh/?pr=HTTPS&a[]=2&page=%d" % n for n in [1, 2]]
+        await self._find_on_pages(urls)
+
+
+class Cnproxy(Provider):
+    domain = "cnproxy.com"
+
+    async def _pipe(self):
+        urls = ["http://www.cnproxy.com/proxy%d.html" % n for n in range(1, 11)]
+        await self._find_on_pages(urls)
+
+
+class Proxy_com_ru(Provider):
+    domain = "proxy.com.ru"
+
+    async def _pipe(self):
+        urls = ["http://proxy.com.ru/gaoni/list_%d.html" % n for n in [1, 2]]
+        await self._find_on_pages(urls)
+
 class ProxyProvider(Provider):
     def __init__(self, *args, **kwargs):
         warnings.warn('`ProxyProvider` is deprecated, use `Provider` instead.',
                       DeprecationWarning)
         super().__init__(*args, **kwargs)
+
 
 
 PROVIDERS = [
@@ -647,10 +688,12 @@ PROVIDERS = [
              proto=('HTTP', 'CONNECT:80', 'HTTPS', 'CONNECT:25')),  # 178
     Provider(url='http://proxytime.ru/http',
              proto=('HTTP', 'CONNECT:80', 'HTTPS', 'CONNECT:25')),  # 547
-    Provider(url='http://free-proxy-list.net/',
-             proto=('HTTP', 'CONNECT:80', 'HTTPS', 'CONNECT:25')),  # 300
-    Provider(url='http://www.proxyservers.eu/',
-             proto=('HTTP', 'CONNECT:80', 'HTTPS', 'CONNECT:25')),  # 1875
+    # Need send post to get list now.
+    # Provider(url='http://free-proxy-list.net/',
+    #          proto=('HTTP', 'CONNECT:80', 'HTTPS', 'CONNECT:25')),  # 300
+    # Redirect to another website.
+    # Provider(url='http://www.proxyservers.eu/',
+    #          proto=('HTTP', 'CONNECT:80', 'HTTPS', 'CONNECT:25')),  # 1875
     Provider(url='http://socks24.ru/proxy/httpProxies.txt',
              proto=('HTTP', 'CONNECT:80', 'HTTPS', 'CONNECT:25')),  # 1601
     Provider(url='http://fineproxy.org/eng/?p=6',
@@ -683,7 +726,6 @@ PROVIDERS = [
     Xseo_in(proto=('HTTP', 'CONNECT:80', 'HTTPS', 'CONNECT:25')),                  # 252
     Spys_ru(proto=('HTTP', 'CONNECT:80', 'HTTPS', 'CONNECT:25')),                  # 674
     Proxylistplus_com(proto=('HTTP', 'CONNECT:80', 'HTTPS', 'CONNECT:25')),        # 301
-    Proxyb_net(proto=('HTTP', 'CONNECT:80', 'HTTPS', 'CONNECT:25')),               # 857
     Proxz_com(proto=('HTTP', 'CONNECT:80', 'HTTPS', 'CONNECT:25'), max_conn=2),    # 443
     Proxymore_com(proto=('HTTP', 'CONNECT:80', 'HTTPS', 'CONNECT:25')),            # 1375
     Proxylist_me(proto=('HTTP', 'CONNECT:80', 'HTTPS', 'CONNECT:25')),             # 2872
@@ -703,9 +745,16 @@ PROVIDERS = [
     Webanetlabs_net(),                                                             # 2615
     Maxiproxies_com(),                                                             # 543
     _50kproxies_com(),                                                             # 822
+
+    Kuaidaili(),
+    Xicidaili(),
+    Freeproxylists_net(),
+    Cnproxy(),
+    Proxy_com_ru(),
     # # Bad...
     # Provider(url='http://go4free.xyz/Free-Proxy/', proto=('HTTP', 'CONNECT:80', 'HTTPS', 'CONNECT:25')),  # 196
     # Provider(url='http://blackstarsecurity.com/proxy-list.txt'),  # 7014
     # Provider(url='http://www.get-proxy.net/proxy-archives'),  # 519
     # Free_proxy_cz(),  # 420
+    # Proxyb_net(proto=('HTTP', 'CONNECT:80', 'HTTPS', 'CONNECT:25')),               # 857
 ]
